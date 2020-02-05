@@ -1,0 +1,43 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.2.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+    id 'maven'
+}
+
+group = 'com.zhengdianfang'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+jar.enabled=true
+def localRepositoryPath = 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+uploadArchives {
+    repositories {
+        //mavenDeployer 需要依赖 apply plugin: 'maven'
+        mavenDeployer   {
+            repository(url: localRepositoryPath)
+            pom.project {
+                name = project.name        // 当前项目名称
+                version = project.version   //当前项目版本  0.0.1
+                groupId = project.group     //  当前项目组  com.xxx
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.apache.tika:tika-core:1.16'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+    implementation group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
